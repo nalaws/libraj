@@ -61,11 +61,18 @@ public class AccountConfig {
 	
 	public AccountResource getAccountResourceOrDefault(AccountStateBlob blob) {
 		byte[] accountResourceBytes = getAccountResourceBytes(blob);
-		return new AccountResource(accountResourceBytes);
+		if(accountResourceBytes == null) {
+			return new AccountResource();
+		} else {
+			return new AccountResource(accountResourceBytes);
+		}
 	}
 	
 	@SuppressWarnings("unused")
 	private byte[] getAccountResourceBytes(AccountStateBlob blob) {
+		if(blob.getBlob().size() == 0) {
+			return null;
+		}
 		byte[] blobBytes = blob.getBlob().toByteArray();
 		int pos = 0;
 		byte[] countBytes = new byte[4];

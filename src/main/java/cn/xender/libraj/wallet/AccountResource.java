@@ -3,11 +3,13 @@ package cn.xender.libraj.wallet;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 
+import cn.xender.libraj.common.Hex;
 import cn.xender.libraj.common.Unitl;
 
 public class AccountResource {
-	private long balance;
+	private BigInteger balance;
 	private long sequenceNumber;
     private byte[] authenticationKey;
     private long sentEventsCount;
@@ -21,10 +23,10 @@ public class AccountResource {
     	this.libraDeserialize(payload);
     }
     
-	public long getBalance() {
+	public BigInteger getBalance() {
 		return balance;
 	}
-	public void setBalance(long balance) {
+	public void setBalance(BigInteger balance) {
 		this.balance = balance;
 	}
 	
@@ -87,15 +89,7 @@ public class AccountResource {
 		byte[] balanceBytes = new byte[8];
 		System.arraycopy(payload, pos, balanceBytes, 0, 8);
 		pos += 8;
-		ByteArrayInputStream balanceStream = new ByteArrayInputStream(Unitl.reverseBytes(balanceBytes));
-		DataInputStream balanceInput = new DataInputStream(balanceStream);
-		try {
-			this.balance = balanceInput.readLong();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		this.balance = new BigInteger(Hex.Bytes2Hex(Unitl.reverseBytes(balanceBytes)), 16);	
 		byte[] revEventCountBytes = new byte[8];
 		System.arraycopy(payload, pos, revEventCountBytes, 0, 8);
 		pos += 8;

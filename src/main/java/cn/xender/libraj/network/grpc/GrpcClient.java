@@ -45,8 +45,8 @@ public class GrpcClient {
 		
 		if(response.getStatusCase() == AdmissionControlOuterClass.SubmitTransactionResponse.StatusCase.AC_STATUS) {
 			return (response.getAcStatus() != AdmissionControlOuterClass.AdmissionControlStatus.Rejected);
-		}
+		} 
 		
-		return false;
+		return true;
 	}
 }

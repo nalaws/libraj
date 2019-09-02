@@ -1,5 +1,6 @@
 package cn.xender.libraj.controller;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -55,14 +56,17 @@ public class LibraApi {
 	 * @param hexAddress
 	 * @return
 	 */
-	public long getBalance(String hexAddress) {
+	public String getBalance(String hexAddress) {
 		AccountResource account = proxy.getAccountResource(hexAddress);
-		return account.getBalance();
+		if(account.getBalance() == null) {
+			return "0";
+		}
+		return account.getBalance().toString(10);
 	}
 	
 	public boolean transfer(String sender, ExtendedPrivKey.KeyPair keyPair, String recver, long amount) {
 		AccountResource resource = proxy.getAccountResource(sender);
-		if(resource.getBalance() < amount) {
+		if(resource.getBalance().compareTo(BigInteger.valueOf(amount)) < 0) {
 			return false;
 		}
 		long expirationTime = Calendar.getInstance().getTimeInMillis() /1000 + TX_EXPIRATION;
